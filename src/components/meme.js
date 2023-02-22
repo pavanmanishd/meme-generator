@@ -25,9 +25,9 @@ function Meme(){
     })
 
 
-    function getMemeImage(event){
+    function getMemeImage(value){
         let url = ""
-        if(event._reactName === "onClick"){
+        if(value === ""){
             setMeme(prevMeme => ({
                 ...prevMeme,
                 ImageName : " "
@@ -40,7 +40,7 @@ function Meme(){
         }
         else{
             allMemes.map(item => {
-                if(meme.ImageName === item.name){
+                if(value === item.name){
                     url = item.url
                     // console.log(item.name)
                 }
@@ -60,13 +60,15 @@ function Meme(){
 
     function handleChange(event) {
         const {name,value} = event.target
+        console.log("event name : "+name)
+        console.log("event value : "+value)
         setMeme(prevMeme => {
             return {
                 ...prevMeme,
                 [name] : value
             }
         })
-        if(name == "ImageName") getMemeImage("onChange");
+        if(name == "ImageName") getMemeImage(value);
     }
     
     function handleSubmit(){
