@@ -1,4 +1,5 @@
 import React from 'react';
+import html2canvas from 'html2canvas';
 // import memesData from "../memesData.js";
 function Meme(){
     // const [memeImage,setMemeImage] = React.useState("https://i.imgflip.com/3lmzyx.jpg")
@@ -8,9 +9,10 @@ function Meme(){
         bottomText : "",
         randomImage : "https://i.imgflip.com/3lmzyx.jpg"
     })
-
+    
     const [allMemes,setAllMemes] = React.useState([])
-
+    
+    
     React.useEffect(function(){
         console.log("Effect used")
         fetch("https://api.imgflip.com/get_memes")
@@ -30,7 +32,6 @@ function Meme(){
     // },[])
 
 
-    console.log(allMemes)
 
 
     function getMemeImage(){
@@ -41,6 +42,7 @@ function Meme(){
             ...prevMeme,
             randomImage : url
         }))
+        
     }
 
     function handleChange(event) {
@@ -52,11 +54,24 @@ function Meme(){
             }
         })
     }
-
+    
     function handleSubmit(){
         console.log(meme)
     }
 
+    function download(){
+        html2canvas(document.getElementById("meme"),{
+            allowTaint: true,
+            useCORS: true
+        }).then(canvas => {
+            var download = document.getElementById("download")
+            var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream")
+            download.setAttribute("href", image)
+            download.click()
+            download.removeAttribute("href")
+        })   
+    }
+    
     return(
         <main className="main-block">
             <form className="input" onSubmit={handleSubmit}>
@@ -67,7 +82,7 @@ function Meme(){
                     onChange={handleChange}
                     name="topText"
                     value={meme.topText}
-                />
+                    />
                 <input 
                     type='text' 
                     className="input-2" 
@@ -75,15 +90,18 @@ function Meme(){
                     onChange={handleChange}
                     name="bottomText"
                     value={meme.bottomText}
-                />
+                    />
             </form>
-            <button onClick={getMemeImage} className='generate-button'>Get a new Meme</button>
-            <div className='meme'>
+            <button onClick={getMemeImage} className='button'>Get a new Meme</button>
+            <div className='meme' id='meme'>
                 <img src={meme.randomImage} alt='meme-img' className="meme-image" />
                 <h2 className="meme--text top">{meme.topText}</h2>
                 <h2 className="meme--text bottom">{meme.bottomText}</h2>
             </div>
+            <a id='download'  download="image.png" ><button className='button' onClick={download}>Download</button></a>
         </main>
     );
+    
 }
+
 export default Meme;
