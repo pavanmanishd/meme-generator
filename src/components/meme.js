@@ -27,13 +27,11 @@ function Meme(){
 
     function getMemeImage(value){
         let url = ""
-        if(value === ""){
+        if(value === " "){
             setMeme(prevMeme => ({
                 ...prevMeme,
                 ImageName : " "
             }))
-        }
-        if(meme.ImageName === " "){
             const memesArray = allMemes;
             const randomNumber = Math.floor(Math.random() * memesArray.length);
             url = memesArray[randomNumber].url;
@@ -58,11 +56,11 @@ function Meme(){
         }))
     }
 
-    function handleChange(event) {
+    async function handleChange(event) {
         const {name,value} = event.target
         console.log("event name : "+name)
         console.log("event value : "+value)
-        setMeme(prevMeme => {
+        await setMeme(prevMeme => {
             return {
                 ...prevMeme,
                 [name] : value
@@ -108,7 +106,7 @@ function Meme(){
                     value={meme.bottomText}
                     />
             </form>
-            <button onClick={getMemeImage} className='button'>Get a Random Meme</button>
+            <button onClick={()=>getMemeImage(" ")} className='button'>Get a Random Meme</button>
             <label htmlFor="select-image">Choose Image Template :</label>
             <select 
                 id="select-image"
