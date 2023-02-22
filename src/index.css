@@ -43,6 +43,12 @@ body {
   text-indent: 10px;
   border-color: rgb(152, 151, 151);
 }
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .input-1,.input-2{
+    width: 90%;
+  }
+}
 .generate-button{
   display: block;
   margin: 10px;
