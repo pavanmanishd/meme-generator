@@ -1,48 +1,61 @@
 import React from 'react';
 import html2canvas from 'html2canvas';
-// import memesData from "../memesData.js";
 function Meme(){
-    // const [memeImage,setMemeImage] = React.useState("https://i.imgflip.com/3lmzyx.jpg")
     
     const [meme, setMeme] = React.useState({
         topText : "",
         bottomText : "",
-        randomImage : "https://i.imgflip.com/3lmzyx.jpg"
+        ImageUrl : "https://i.imgflip.com/3lmzyx.jpg",
+        ImageName : " "
     })
-    
     const [allMemes,setAllMemes] = React.useState([])
+    // console.log(allMemes)
     
     
     React.useEffect(function(){
-        console.log("Effect used")
         fetch("https://api.imgflip.com/get_memes")
-            .then(res => res.json())
-            .then(data => setAllMemes(data.data.memes))
+        .then(res => res.json())
+        .then(data => setAllMemes(data.data.memes))
     },[])
-
-    // OR
-
-    // React.useEffect(() => {
-    //     async function getMemes(){
-    //         const res = await fetch("https://api.imgflip.com/get_memes")
-    //         const data = await res.json()
-    //         setAllMemes(data.data.memes)
-    //     }
-    //     getMemes()
-    // },[])
+    
+    const options = allMemes.map(item => {
+        return(
+            <option value={item.name} key={item.id} >{item.name}</option>
+        )
+    })
 
 
-
-
-    function getMemeImage(){
-        const memesArray = allMemes;
-        const randomNumber = Math.floor(Math.random() * memesArray.length);
-        const url = memesArray[randomNumber].url;
+    function getMemeImage(event){
+        let url = ""
+        if(event._reactName === "onClick"){
+            setMeme(prevMeme => ({
+                ...prevMeme,
+                ImageName : " "
+            }))
+        }
+        if(meme.ImageName === " "){
+            const memesArray = allMemes;
+            const randomNumber = Math.floor(Math.random() * memesArray.length);
+            url = memesArray[randomNumber].url;
+        }
+        else{
+            allMemes.map(item => {
+                if(meme.ImageName === item.name){
+                    url = item.url
+                    // console.log(item.name)
+                }
+                return item
+            })
+            setMeme(prevMeme => ({
+                ...prevMeme,
+                ImageUrl : url
+            }))
+        }
+        // console.log(url)
         setMeme(prevMeme => ({
             ...prevMeme,
-            randomImage : url
+            ImageUrl : url
         }))
-        
     }
 
     function handleChange(event) {
@@ -53,6 +66,7 @@ function Meme(){
                 [name] : value
             }
         })
+        if(name == "ImageName") getMemeImage("onChange");
     }
     
     function handleSubmit(){
@@ -92,9 +106,20 @@ function Meme(){
                     value={meme.bottomText}
                     />
             </form>
-            <button onClick={getMemeImage} className='button'>Get a new Meme</button>
+            <button onClick={getMemeImage} className='button'>Get a Random Meme</button>
+            <label htmlFor="select-image">Choose Image Template :</label>
+            <select 
+                id="select-image"
+                className="select-option"
+                value={meme.ImageName} 
+                onChange={handleChange}
+                name="ImageName"
+            >
+                <option value=" ">--Choose a Template--if not choosen you get a random image--</option>
+                {options}
+            </select>
             <div className='meme' id='meme'>
-                <img src={meme.randomImage} alt='meme-img' className="meme-image" />
+                <img src={meme.ImageUrl} alt='meme-img' className="meme-image" />
                 <h2 className="meme--text top">{meme.topText}</h2>
                 <h2 className="meme--text bottom">{meme.bottomText}</h2>
             </div>

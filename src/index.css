@@ -101,3 +101,20 @@ body {
 .top {
   top: 0;
 }
+
+
+select {
+    /* appearance: none; */
+  background: linear-gradient(90.41deg, #711F8D 1.14%,#A818DA);
+  width: 500px;
+  height: 40px;
+  color: white;
+  cursor: pointer;
+  border-radius: 10px;
+  font-family: 'Poppins';
+  font-weight: 600;
+  margin: 10px;
+}
+option{
+  color: black;
+}
